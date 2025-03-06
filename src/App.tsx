@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import Papa from 'papaparse';
 import { languageOptions } from './config/languages';
 
@@ -23,14 +23,14 @@ function App() {
   // Update filtered data when language or data changes
   useEffect(() => {
     if (data) {
-      const filtered = data.reduce((acc, item) => {
-        const key = item.key as string;
-        const value = item[selectedLanguage] as string;
-        if (key && value) {
+      const filtered = data.reduce<Record<string, string>>((acc, item) => {
+        const key = item.key;
+        const value = item[selectedLanguage];
+        if (typeof key === 'string' && typeof value === 'string') {
           acc[key] = value;
         }
         return acc;
-      }, {} as Record<string, string>);
+      }, {});
       setFilteredData(filtered);
     }
   }, [data, selectedLanguage]);
@@ -74,14 +74,14 @@ function App() {
         setData(results.data);
         
         // Convert filtered data to JSON and trigger download if autoDownload is enabled
-        const filtered = results.data.reduce((acc, item) => {
-          const key = item.key as string;
-          const value = item[selectedLanguage] as string;
-          if (key && value) {
+        const filtered = results.data.reduce<Record<string, string>>((acc, item) => {
+          const key = item.key;
+          const value = item[selectedLanguage];
+          if (typeof key === 'string' && typeof value === 'string') {
             acc[key] = value;
           }
           return acc;
-        }, {} as Record<string, string>);
+        }, {});
 
         if (autoDownload) {
           downloadJson(filtered);
